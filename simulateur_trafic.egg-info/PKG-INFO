@@ -1,0 +1,59 @@
+Metadata-Version: 2.4
+Name: simulateur-trafic
+Version: 1.0.0
+Summary: Simulateur modulaire de trafic routier : réseau, véhicules, statistiques et rapports.
+Author: Équipe Mobilité Intelligente
+License-Expression: MIT
+Keywords: simulation,trafic,mobilité,réseau routier,POO
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Education
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Scientific/Engineering
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: matplotlib>=3.7
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0; extra == "dev"
+Provides-Extra: docs
+Requires-Dist: sphinx>=7.0; extra == "docs"
+Requires-Dist: sphinx-rtd-theme>=2.0; extra == "docs"
+Dynamic: license-file
+
+# Simulateur de trafic routier
+
+Simulateur modulaire de trafic : réseau (routes, intersections à feux),
+véhicules, statistiques (vitesses, congestion, temps de parcours) et
+rapports (console, CSV/JSON, graphiques).
+
+## Installation
+
+```bash
+pip install -e .            # utilisation
+pip install -e ".[dev,docs]"  # + tests et documentation
+```
+
+## Utilisation
+
+```bash
+simulateur-trafic --config data/config_reseau.json --tours 60 --delta-t 60
+simulateur-trafic --version
+```
+
+ou en Python :
+
+```python
+from core.simulateur import Simulateur
+Simulateur(fichier_config="data/config_reseau.json").lancer_simulation(60, 60)
+```
+
+## Tests et documentation
+
+```bash
+pytest                              # ou : python -m unittest discover -s tests
+cd docs && python -m sphinx -b html . _build/html
+```
+
+## Licence
+
+MIT — voir [LICENSE](LICENSE).

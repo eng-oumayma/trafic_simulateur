@@ -1,0 +1,2 @@
+[console_scripts]
+simulateur-trafic = core.cli:main

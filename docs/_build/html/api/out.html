@@ -1,0 +1,322 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paquet out &mdash; Documentation Simulateur de trafic 1.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=7a28dfa3"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/translations.js?v=e6b791cb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+    <link rel="prev" title="Paquet core" href="core.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Simulateur de trafic
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Sommaire</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../guide.html">Guide d’utilisation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Référence de l’API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="models.html">Paquet <code class="docutils literal notranslate"><span class="pre">models</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html">Paquet <code class="docutils literal notranslate"><span class="pre">core</span></code></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Paquet <code class="docutils literal notranslate"><span class="pre">out</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-out.affichage">Affichage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#out.affichage.afficher_etat_console"><code class="docutils literal notranslate"><span class="pre">afficher_etat_console()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#out.affichage.afficher_resume"><code class="docutils literal notranslate"><span class="pre">afficher_resume()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#out.affichage.tracer_evolution"><code class="docutils literal notranslate"><span class="pre">tracer_evolution()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#out.affichage.tracer_congestion"><code class="docutils literal notranslate"><span class="pre">tracer_congestion()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#out.affichage.tracer_temps_parcours"><code class="docutils literal notranslate"><span class="pre">tracer_temps_parcours()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#out.affichage.tracer_carte"><code class="docutils literal notranslate"><span class="pre">tracer_carte()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#out.affichage.tracer_tout"><code class="docutils literal notranslate"><span class="pre">tracer_tout()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-out.export">Export</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#out.export.exporter_historique_csv"><code class="docutils literal notranslate"><span class="pre">exporter_historique_csv()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#out.export.exporter_routes_csv"><code class="docutils literal notranslate"><span class="pre">exporter_routes_csv()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#out.export.exporter_trajets_csv"><code class="docutils literal notranslate"><span class="pre">exporter_trajets_csv()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#out.export.exporter_resume_json"><code class="docutils literal notranslate"><span class="pre">exporter_resume_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#out.export.exporter_tout"><code class="docutils literal notranslate"><span class="pre">exporter_tout()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Simulateur de trafic</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Référence de l’API</a></li>
+      <li class="breadcrumb-item active">Paquet <code class="docutils literal notranslate"><span class="pre">out</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/out.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-out">
+<span id="paquet-out"></span><h1>Paquet <code class="docutils literal notranslate"><span class="pre">out</span></code><a class="headerlink" href="#module-out" title="Lien vers cette rubrique"></a></h1>
+<p>Sorties du simulateur : affichage console/graphique et export de fichiers.</p>
+<section id="module-out.affichage">
+<span id="affichage"></span><h2>Affichage<a class="headerlink" href="#module-out.affichage" title="Lien vers cette rubrique"></a></h2>
+<p>Affichage console et graphiques (matplotlib).</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="out.affichage.afficher_etat_console">
+<span class="sig-prename descclassname"><span class="pre">out.affichage.</span></span><span class="sig-name descname"><span class="pre">afficher_etat_console</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reseau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">analyseur</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/out/affichage.html#afficher_etat_console"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#out.affichage.afficher_etat_console" title="Lien vers cette définition"></a></dt>
+<dd><p>Affiche une ligne d’état de la simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>temps</strong> (<em>float</em>) – Temps de simulation (s).</p></li>
+<li><p><strong>reseau</strong> (<a class="reference internal" href="models.html#models.reseau.ReseauRoutier" title="models.reseau.ReseauRoutier"><em>ReseauRoutier</em></a>) – Réseau simulé.</p></li>
+<li><p><strong>analyseur</strong> (<a class="reference internal" href="core.html#core.analyseur.Analyseur" title="core.analyseur.Analyseur"><em>Analyseur</em></a>) – Source de la dernière mesure.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="out.affichage.afficher_resume">
+<span class="sig-prename descclassname"><span class="pre">out.affichage.</span></span><span class="sig-name descname"><span class="pre">afficher_resume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resume</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/out/affichage.html#afficher_resume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#out.affichage.afficher_resume" title="Lien vers cette définition"></a></dt>
+<dd><p>Affiche le rapport final en console.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>resume</strong> (<em>dict</em>) – Résumé produit par <code class="xref py py-meth docutils literal notranslate"><span class="pre">Analyseur.resume()</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="out.affichage.tracer_evolution">
+<span class="sig-prename descclassname"><span class="pre">out.affichage.</span></span><span class="sig-name descname"><span class="pre">tracer_evolution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyseur</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chemin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">montrer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/out/affichage.html#tracer_evolution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#out.affichage.tracer_evolution" title="Lien vers cette définition"></a></dt>
+<dd><p>Trace la vitesse moyenne et le nombre de véhicules au cours du temps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analyseur</strong> (<a class="reference internal" href="core.html#core.analyseur.Analyseur" title="core.analyseur.Analyseur"><em>Analyseur</em></a>) – Source des données.</p></li>
+<li><p><strong>chemin</strong> (<em>str</em><em> | </em><em>None</em>) – Fichier image de sortie.</p></li>
+<li><p><strong>montrer</strong> (<em>bool</em>) – Ouvre une fenêtre interactive.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="out.affichage.tracer_congestion">
+<span class="sig-prename descclassname"><span class="pre">out.affichage.</span></span><span class="sig-name descname"><span class="pre">tracer_congestion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyseur</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chemin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">montrer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/out/affichage.html#tracer_congestion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#out.affichage.tracer_congestion" title="Lien vers cette définition"></a></dt>
+<dd><p>Trace l’occupation moyenne de chaque route (histogramme trié).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analyseur</strong> (<a class="reference internal" href="core.html#core.analyseur.Analyseur" title="core.analyseur.Analyseur"><em>Analyseur</em></a>) – Source des données.</p></li>
+<li><p><strong>chemin</strong> (<em>str</em><em> | </em><em>None</em>) – Fichier image de sortie.</p></li>
+<li><p><strong>montrer</strong> (<em>bool</em>) – Ouvre une fenêtre interactive.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="out.affichage.tracer_temps_parcours">
+<span class="sig-prename descclassname"><span class="pre">out.affichage.</span></span><span class="sig-name descname"><span class="pre">tracer_temps_parcours</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reseau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chemin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">montrer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/out/affichage.html#tracer_temps_parcours"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#out.affichage.tracer_temps_parcours" title="Lien vers cette définition"></a></dt>
+<dd><p>Trace l’histogramme des temps de parcours.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reseau</strong> (<a class="reference internal" href="models.html#models.reseau.ReseauRoutier" title="models.reseau.ReseauRoutier"><em>ReseauRoutier</em></a>) – Réseau simulé.</p></li>
+<li><p><strong>chemin</strong> (<em>str</em><em> | </em><em>None</em>) – Fichier image de sortie.</p></li>
+<li><p><strong>montrer</strong> (<em>bool</em>) – Ouvre une fenêtre interactive.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="out.affichage.tracer_carte">
+<span class="sig-prename descclassname"><span class="pre">out.affichage.</span></span><span class="sig-name descname"><span class="pre">tracer_carte</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reseau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valeurs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chemin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">montrer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">titre</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Carte</span> <span class="pre">de</span> <span class="pre">congestion'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/out/affichage.html#tracer_carte"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#out.affichage.tracer_carte" title="Lien vers cette définition"></a></dt>
+<dd><p>Dessine la carte du réseau, colorée selon une valeur par route.</p>
+<p>Les intersections à feux sont des carrés, les autres des cercles. Les
+routes à double sens sont décalées pour rester distinctes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reseau</strong> (<a class="reference internal" href="models.html#models.reseau.ReseauRoutier" title="models.reseau.ReseauRoutier"><em>ReseauRoutier</em></a>) – Réseau à dessiner.</p></li>
+<li><p><strong>valeurs</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>float</em><em>]</em>) – Occupation moyenne par nom de route.</p></li>
+<li><p><strong>chemin</strong> (<em>str</em><em> | </em><em>None</em>) – Fichier image de sortie.</p></li>
+<li><p><strong>montrer</strong> (<em>bool</em>) – Ouvre une fenêtre interactive.</p></li>
+<li><p><strong>titre</strong> (<em>str</em>) – Titre de la carte.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="out.affichage.tracer_tout">
+<span class="sig-prename descclassname"><span class="pre">out.affichage.</span></span><span class="sig-name descname"><span class="pre">tracer_tout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dossier</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/out/affichage.html#tracer_tout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#out.affichage.tracer_tout" title="Lien vers cette définition"></a></dt>
+<dd><p>Génère les quatre graphiques standard dans un dossier.</p>
+<p>Crée <code class="docutils literal notranslate"><span class="pre">evolution.png</span></code>, <code class="docutils literal notranslate"><span class="pre">congestion.png</span></code>, <code class="docutils literal notranslate"><span class="pre">temps_parcours.png</span></code> et
+<code class="docutils literal notranslate"><span class="pre">carte.png</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>simu</strong> (<a class="reference internal" href="core.html#core.simulateur.Simulateur" title="core.simulateur.Simulateur"><em>Simulateur</em></a>) – Simulation terminée.</p></li>
+<li><p><strong>dossier</strong> (<em>str</em>) – Dossier de sortie.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-out.export">
+<span id="export"></span><h2>Export<a class="headerlink" href="#module-out.export" title="Lien vers cette rubrique"></a></h2>
+<p>Export des résultats de simulation en CSV et JSON.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="out.export.exporter_historique_csv">
+<span class="sig-prename descclassname"><span class="pre">out.export.</span></span><span class="sig-name descname"><span class="pre">exporter_historique_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyseur</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chemin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/out/export.html#exporter_historique_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#out.export.exporter_historique_csv" title="Lien vers cette définition"></a></dt>
+<dd><p>Exporte l’évolution globale du trafic.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analyseur</strong> (<a class="reference internal" href="core.html#core.analyseur.Analyseur" title="core.analyseur.Analyseur"><em>Analyseur</em></a>) – Source des données.</p></li>
+<li><p><strong>chemin</strong> (<em>str</em>) – Fichier CSV de sortie.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="out.export.exporter_routes_csv">
+<span class="sig-prename descclassname"><span class="pre">out.export.</span></span><span class="sig-name descname"><span class="pre">exporter_routes_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyseur</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chemin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/out/export.html#exporter_routes_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#out.export.exporter_routes_csv" title="Lien vers cette définition"></a></dt>
+<dd><p>Exporte les mesures par route et par tour.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analyseur</strong> (<a class="reference internal" href="core.html#core.analyseur.Analyseur" title="core.analyseur.Analyseur"><em>Analyseur</em></a>) – Source des données.</p></li>
+<li><p><strong>chemin</strong> (<em>str</em>) – Fichier CSV de sortie.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="out.export.exporter_trajets_csv">
+<span class="sig-prename descclassname"><span class="pre">out.export.</span></span><span class="sig-name descname"><span class="pre">exporter_trajets_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reseau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chemin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/out/export.html#exporter_trajets_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#out.export.exporter_trajets_csv" title="Lien vers cette définition"></a></dt>
+<dd><p>Exporte les trajets des véhicules arrivés à destination.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reseau</strong> (<a class="reference internal" href="models.html#models.reseau.ReseauRoutier" title="models.reseau.ReseauRoutier"><em>ReseauRoutier</em></a>) – Réseau simulé.</p></li>
+<li><p><strong>chemin</strong> (<em>str</em>) – Fichier CSV de sortie.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="out.export.exporter_resume_json">
+<span class="sig-prename descclassname"><span class="pre">out.export.</span></span><span class="sig-name descname"><span class="pre">exporter_resume_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chemin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/out/export.html#exporter_resume_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#out.export.exporter_resume_json" title="Lien vers cette définition"></a></dt>
+<dd><p>Exporte le résumé de la simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>resume</strong> (<em>dict</em>) – Résumé produit par <code class="xref py py-meth docutils literal notranslate"><span class="pre">Analyseur.resume()</span></code>.</p></li>
+<li><p><strong>chemin</strong> (<em>str</em>) – Fichier JSON de sortie.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="out.export.exporter_tout">
+<span class="sig-prename descclassname"><span class="pre">out.export.</span></span><span class="sig-name descname"><span class="pre">exporter_tout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dossier</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/out/export.html#exporter_tout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#out.export.exporter_tout" title="Lien vers cette définition"></a></dt>
+<dd><p>Exporte tous les fichiers de résultats dans un dossier.</p>
+<p>Crée <code class="docutils literal notranslate"><span class="pre">historique.csv</span></code>, <code class="docutils literal notranslate"><span class="pre">routes.csv</span></code>, <code class="docutils literal notranslate"><span class="pre">trajets.csv</span></code> et
+<code class="docutils literal notranslate"><span class="pre">resume.json</span></code>. Le dossier est créé s’il n’existe pas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>simu</strong> (<a class="reference internal" href="core.html#core.simulateur.Simulateur" title="core.simulateur.Simulateur"><em>Simulateur</em></a>) – Simulation terminée.</p></li>
+<li><p><strong>dossier</strong> (<em>str</em>) – Dossier de sortie.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="core.html" class="btn btn-neutral float-left" title="Paquet core" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Droits d'auteur .</p>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

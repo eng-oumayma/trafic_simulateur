@@ -1,0 +1,285 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>models.route &mdash; Documentation Simulateur de trafic 1.0</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=7a28dfa3"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Simulateur de trafic
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Sommaire</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../guide.html">Guide d’utilisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">Référence de l’API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Simulateur de trafic</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">models.route</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de models.route</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Modèle d'une route.</span>
+
+<span class="sd">Une route est un tronçon orienté reliant deux intersections. Elle gère la</span>
+<span class="sd">file des véhicules présents et leur déplacement sans collision.</span>
+<span class="sd">"""</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+
+<div class="viewcode-block" id="Route">
+<a class="viewcode-back" href="../../api/models.html#models.route.Route">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Route</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Tronçon routier orienté à une seule voie.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        ECART_MIN (float): Distance minimale entre deux pare-chocs avant (m).</span>
+<span class="sd">        nom (str): Nom unique de la route.</span>
+<span class="sd">        longueur (float): Longueur (m).</span>
+<span class="sd">        limite_vitesse (float): Vitesse maximale autorisée (km/h).</span>
+<span class="sd">        origine (str): Identifiant de l'intersection de départ.</span>
+<span class="sd">        destination (str): Identifiant de l'intersection d'arrivée.</span>
+<span class="sd">        vehicules (list[Vehicule]): Véhicules actuellement présents.</span>
+<span class="sd">    """</span>
+    <span class="n">ECART_MIN</span> <span class="o">=</span> <span class="mf">7.0</span>  <span class="c1"># m entre deux pare-chocs avant (5 m de véhicule + 2 m)</span>
+
+<div class="viewcode-block" id="Route.__init__">
+<a class="viewcode-back" href="../../api/models.html#models.route.Route.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nom</span><span class="p">,</span> <span class="n">longueur</span><span class="p">,</span> <span class="n">limite_vitesse</span><span class="p">,</span> <span class="n">origine</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Crée une route vide.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            nom (str): Nom unique de la route.</span>
+<span class="sd">            longueur (float): Longueur en mètres (&gt; 0).</span>
+<span class="sd">            limite_vitesse (float): Limite de vitesse en km/h (&gt; 0).</span>
+<span class="sd">            origine (str): Identifiant de l'intersection de départ.</span>
+<span class="sd">            destination (str): Identifiant de l'intersection d'arrivée.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: Si la longueur ou la limite de vitesse n'est pas positive.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">longueur</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">limite_vitesse</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"longueur et limite_vitesse doivent être &gt; 0"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nom</span> <span class="o">=</span> <span class="n">nom</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">longueur</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">longueur</span><span class="p">)</span>              <span class="c1"># m</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limite_vitesse</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">limite_vitesse</span><span class="p">)</span>  <span class="c1"># km/h</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">origine</span> <span class="o">=</span> <span class="n">origine</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination</span> <span class="o">=</span> <span class="n">destination</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vehicules</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+
+    <span class="c1"># --- propriétés -----------------------------------------------------</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">capacite</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""int: Nombre maximal de véhicules que la route peut contenir</span>
+<span class="sd">        (``longueur // ECART_MIN``, au moins 1).</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">longueur</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">ECART_MIN</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">taux_occupation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""float: Rapport entre le nombre de véhicules présents et la capacité,</span>
+<span class="sd">        compris entre 0 et 1.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicules</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">capacite</span>
+
+<div class="viewcode-block" id="Route.vitesse_moyenne_kmh">
+<a class="viewcode-back" href="../../api/models.html#models.route.Route.vitesse_moyenne_kmh">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">vitesse_moyenne_kmh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Calcule la vitesse instantanée moyenne des véhicules présents.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float | None: Vitesse moyenne en km/h, ou ``None`` si la route est vide.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicules</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="mf">3.6</span> <span class="o">*</span> <span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">vitesse</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicules</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicules</span><span class="p">)</span></div>
+
+
+    <span class="c1"># --- gestion des véhicules -----------------------------------------</span>
+<div class="viewcode-block" id="Route.a_de_la_place">
+<a class="viewcode-back" href="../../api/models.html#models.route.Route.a_de_la_place">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">a_de_la_place</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Indique si un véhicule peut entrer sur la route.</span>
+
+<span class="sd">        Il faut que la capacité ne soit pas atteinte et que le dernier véhicule</span>
+<span class="sd">        entré se soit éloigné d'au moins ``ECART_MIN`` de l'entrée.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: ``True`` si l'entrée est possible.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicules</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">capacite</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">position</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ECART_MIN</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicules</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Route.ajouter_vehicule">
+<a class="viewcode-back" href="../../api/models.html#models.route.Route.ajouter_vehicule">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ajouter_vehicule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicule</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Place un véhicule au début de la route.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            vehicule (Vehicule): Véhicule à ajouter.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: ``True`` si le véhicule a été ajouté, ``False`` si la route est</span>
+<span class="sd">            saturée à l'entrée.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">a_de_la_place</span><span class="p">():</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">vehicule</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">vehicule</span><span class="o">.</span><span class="n">route_actuelle</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vehicules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vehicule</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="Route.retirer_vehicule">
+<a class="viewcode-back" href="../../api/models.html#models.route.Route.retirer_vehicule">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">retirer_vehicule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicule</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Retire un véhicule de la route.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            vehicule (Vehicule): Véhicule à retirer.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: Si le véhicule n'est pas sur cette route.</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vehicules</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">vehicule</span><span class="p">)</span>
+        <span class="n">vehicule</span><span class="o">.</span><span class="n">route_actuelle</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Route.vitesse_desiree">
+<a class="viewcode-back" href="../../api/models.html#models.route.Route.vitesse_desiree">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">vitesse_desiree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Calcule la vitesse souhaitée selon le niveau de remplissage.</span>
+
+<span class="sd">        Modèle de Greenshields simplifié : la vitesse décroît linéairement de la</span>
+<span class="sd">        limite (route vide) jusqu'à 5 % de celle-ci (route pleine).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: Vitesse cible en m/s.</span>
+<span class="sd">        """</span>
+        <span class="n">v_libre</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">limite_vitesse</span> <span class="o">/</span> <span class="mf">3.6</span>
+        <span class="k">return</span> <span class="n">v_libre</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">taux_occupation</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Route.mettre_a_jour_vehicules">
+<a class="viewcode-back" href="../../api/models.html#models.route.Route.mettre_a_jour_vehicules">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mettre_a_jour_vehicules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta_t</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Fait avancer tous les véhicules de la route.</span>
+
+<span class="sd">        Les véhicules sont traités du plus avancé au moins avancé ; chacun est</span>
+<span class="sd">        borné par le pare-chocs de celui qui le précède, ce qui interdit tout</span>
+<span class="sd">        dépassement et toute collision.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            delta_t (float): Durée du pas de temps (s).</span>
+<span class="sd">        """</span>
+        <span class="n">v_cible</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vitesse_desiree</span><span class="p">()</span>
+        <span class="n">limite</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">longueur</span>
+        <span class="k">for</span> <span class="n">veh</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicules</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="o">-</span><span class="n">v</span><span class="o">.</span><span class="n">position</span><span class="p">):</span>
+            <span class="n">veh</span><span class="o">.</span><span class="n">avancer</span><span class="p">(</span><span class="n">delta_t</span><span class="p">,</span> <span class="n">v_cible</span><span class="p">,</span> <span class="n">limite</span><span class="p">)</span>
+            <span class="n">limite</span> <span class="o">=</span> <span class="n">veh</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ECART_MIN</span></div>
+
+
+<div class="viewcode-block" id="Route.tete_de_file">
+<a class="viewcode-back" href="../../api/models.html#models.route.Route.tete_de_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tete_de_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Retourne le véhicule arrivé au bout de la route, le cas échéant.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Vehicule | None: Véhicule en tête s'il a atteint la fin de la route,</span>
+<span class="sd">            sinon ``None``.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicules</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">tete</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicules</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tete</span> <span class="k">if</span> <span class="n">tete</span><span class="o">.</span><span class="n">position</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">longueur</span> <span class="o">-</span> <span class="mf">1e-6</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Représentation lisible : nom, sens et nombre de véhicules."""</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"Route(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nom</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">origine</span><span class="si">}</span><span class="s2">-&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">destination</span><span class="si">}</span><span class="s2">, n=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicules</span><span class="p">)</span><span class="si">}</span><span class="s2">)"</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Droits d'auteur .</p>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

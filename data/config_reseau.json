@@ -1,0 +1,178 @@
+{
+  "intersections": [
+    {
+      "id": "A",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "id": "B",
+      "x": 1.5,
+      "y": 0,
+      "feux": [
+        {
+          "routes": [
+            "A-B",
+            "C-B"
+          ],
+          "duree": 30
+        },
+        {
+          "routes": [
+            "E-B"
+          ],
+          "duree": 30
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "x": 3,
+      "y": 0
+    },
+    {
+      "id": "D",
+      "x": 0,
+      "y": 1
+    },
+    {
+      "id": "E",
+      "x": 1.5,
+      "y": 1,
+      "feux": [
+        {
+          "routes": [
+            "D-E",
+            "F-E"
+          ],
+          "duree": 30
+        },
+        {
+          "routes": [
+            "B-E"
+          ],
+          "duree": 30
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "x": 3,
+      "y": 1
+    }
+  ],
+  "routes": [
+    {
+      "nom": "A-B",
+      "origine": "A",
+      "destination": "B",
+      "longueur": 1500,
+      "limite_vitesse": 70
+    },
+    {
+      "nom": "B-A",
+      "origine": "B",
+      "destination": "A",
+      "longueur": 1500,
+      "limite_vitesse": 70
+    },
+    {
+      "nom": "B-C",
+      "origine": "B",
+      "destination": "C",
+      "longueur": 1500,
+      "limite_vitesse": 70
+    },
+    {
+      "nom": "C-B",
+      "origine": "C",
+      "destination": "B",
+      "longueur": 1500,
+      "limite_vitesse": 70
+    },
+    {
+      "nom": "D-E",
+      "origine": "D",
+      "destination": "E",
+      "longueur": 1500,
+      "limite_vitesse": 70
+    },
+    {
+      "nom": "E-D",
+      "origine": "E",
+      "destination": "D",
+      "longueur": 1500,
+      "limite_vitesse": 70
+    },
+    {
+      "nom": "E-F",
+      "origine": "E",
+      "destination": "F",
+      "longueur": 1500,
+      "limite_vitesse": 70
+    },
+    {
+      "nom": "F-E",
+      "origine": "F",
+      "destination": "E",
+      "longueur": 1500,
+      "limite_vitesse": 70
+    },
+    {
+      "nom": "A-D",
+      "origine": "A",
+      "destination": "D",
+      "longueur": 1000,
+      "limite_vitesse": 50
+    },
+    {
+      "nom": "D-A",
+      "origine": "D",
+      "destination": "A",
+      "longueur": 1000,
+      "limite_vitesse": 50
+    },
+    {
+      "nom": "B-E",
+      "origine": "B",
+      "destination": "E",
+      "longueur": 1000,
+      "limite_vitesse": 50
+    },
+    {
+      "nom": "E-B",
+      "origine": "E",
+      "destination": "B",
+      "longueur": 1000,
+      "limite_vitesse": 50
+    },
+    {
+      "nom": "C-F",
+      "origine": "C",
+      "destination": "F",
+      "longueur": 1000,
+      "limite_vitesse": 50
+    },
+    {
+      "nom": "F-C",
+      "origine": "F",
+      "destination": "C",
+      "longueur": 1000,
+      "limite_vitesse": 50
+    }
+  ],
+  "generation": {
+    "seed": 42,
+    "vehicules_initiaux": 30,
+    "taux_apparition": 18,
+    "points_entree": [
+      "A-B",
+      "D-E",
+      "C-B",
+      "F-E",
+      "A-D",
+      "C-F"
+    ],
+    "sous_pas": 5
+  }
+}

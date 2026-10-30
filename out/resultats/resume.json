@@ -1,0 +1,22 @@
+{
+  "duree_simulee_min": 60.0,
+  "vehicules_crees": 809,
+  "vehicules_arrives": 665,
+  "vehicules_en_circulation": 144,
+  "vitesse_moyenne_globale_kmh": 35.567600372331725,
+  "temps_parcours": {
+    "nombre": 665,
+    "moyen_s": 559.390977443609,
+    "median_s": 495.0,
+    "min_s": 165.0,
+    "max_s": 1410.0
+  },
+  "zones_congestion": [
+    {
+      "route": "F-E",
+      "frequence": 0.8833333333333333,
+      "occupation_moyenne": 0.20249221183800623,
+      "vitesse_moyenne_kmh": 13.941235593936918
+    }
+  ]
+}

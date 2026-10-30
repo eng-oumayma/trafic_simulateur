@@ -1,0 +1,356 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paquet core &mdash; Documentation Simulateur de trafic 1.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=7a28dfa3"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/translations.js?v=e6b791cb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+    <link rel="next" title="Paquet out" href="out.html" />
+    <link rel="prev" title="Paquet models" href="models.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Simulateur de trafic
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Sommaire</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../guide.html">Guide d’utilisation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Référence de l’API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="models.html">Paquet <code class="docutils literal notranslate"><span class="pre">models</span></code></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Paquet <code class="docutils literal notranslate"><span class="pre">core</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-core.simulateur">Simulateur</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#core.simulateur.Simulateur"><code class="docutils literal notranslate"><span class="pre">Simulateur</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-core.analyseur">Analyseur</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#core.analyseur.Analyseur"><code class="docutils literal notranslate"><span class="pre">Analyseur</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="out.html">Paquet <code class="docutils literal notranslate"><span class="pre">out</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Simulateur de trafic</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Référence de l’API</a></li>
+      <li class="breadcrumb-item active">Paquet <code class="docutils literal notranslate"><span class="pre">core</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/core.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-core">
+<span id="paquet-core"></span><h1>Paquet <code class="docutils literal notranslate"><span class="pre">core</span></code><a class="headerlink" href="#module-core" title="Lien vers cette rubrique"></a></h1>
+<p>Cœur du simulateur : boucle de simulation et analyse statistique.</p>
+<section id="module-core.simulateur">
+<span id="simulateur"></span><h2>Simulateur<a class="headerlink" href="#module-core.simulateur" title="Lien vers cette rubrique"></a></h2>
+<p>Simulateur : charge la configuration et pilote la boucle temporelle.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.simulateur.Simulateur">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">core.simulateur.</span></span><span class="sig-name descname"><span class="pre">Simulateur</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fichier_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">afficher</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dossier_sortie</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'out/resultats'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/simulateur.html#Simulateur"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.simulateur.Simulateur" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Orchestrateur de la simulation.</p>
+<dl>
+<dt>Exemple:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">simu</span> <span class="o">=</span> <span class="n">Simulateur</span><span class="p">(</span><span class="n">fichier_config</span><span class="o">=</span><span class="s2">"data/config_reseau.json"</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resume</span> <span class="o">=</span> <span class="n">simu</span><span class="o">.</span><span class="n">lancer_simulation</span><span class="p">(</span><span class="n">n_tours</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">delta_t</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>dict</em>) – Configuration chargée.</p></li>
+<li><p><strong>reseau</strong> (<a class="reference internal" href="models.html#models.reseau.ReseauRoutier" title="models.reseau.ReseauRoutier"><em>ReseauRoutier</em></a>) – Réseau simulé.</p></li>
+<li><p><strong>analyseur</strong> (<a class="reference internal" href="#core.analyseur.Analyseur" title="core.analyseur.Analyseur"><em>Analyseur</em></a>) – Collecteur de statistiques.</p></li>
+<li><p><strong>rng</strong> (<em>random.Random</em>) – Générateur pseudo-aléatoire (graine <code class="docutils literal notranslate"><span class="pre">seed</span></code>).</p></li>
+<li><p><strong>taux_apparition</strong> (<em>float</em>) – Véhicules créés par minute.</p></li>
+<li><p><strong>sous_pas</strong> (<em>float</em>) – Durée maximale d’un sous-pas de calcul (s).</p></li>
+<li><p><strong>temps</strong> (<em>float</em>) – Temps de simulation courant (s).</p></li>
+<li><p><strong>resume</strong> (<em>dict</em><em> | </em><em>None</em>) – Résumé final, disponible après la simulation.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.simulateur.Simulateur.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fichier_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">afficher</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dossier_sortie</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'out/resultats'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/simulateur.html#Simulateur.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.simulateur.Simulateur.__init__" title="Lien vers cette définition"></a></dt>
+<dd><p>Initialise le simulateur.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fichier_config</strong> (<em>str</em><em> | </em><em>None</em>) – Chemin d’un fichier JSON de configuration.</p></li>
+<li><p><strong>config</strong> (<em>dict</em><em> | </em><em>None</em>) – Configuration déjà chargée (prioritaire).</p></li>
+<li><p><strong>afficher</strong> (<em>bool</em>) – Affiche l’état et le rapport en console.</p></li>
+<li><p><strong>dossier_sortie</strong> (<em>str</em>) – Dossier des exports et graphiques.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Si ni <code class="docutils literal notranslate"><span class="pre">fichier_config</span></code> ni <code class="docutils literal notranslate"><span class="pre">config</span></code> n’est fourni.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.simulateur.Simulateur.lancer_simulation">
+<span class="sig-name descname"><span class="pre">lancer_simulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_tours</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intervalle_affichage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exporter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graphiques</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/simulateur.html#Simulateur.lancer_simulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.simulateur.Simulateur.lancer_simulation" title="Lien vers cette définition"></a></dt>
+<dd><p>Lance la simulation.</p>
+<p>Chaque tour de <code class="docutils literal notranslate"><span class="pre">delta_t</span></code> secondes est découpé en sous-pas d’au plus
+<code class="docutils literal notranslate"><span class="pre">sous_pas</span></code> secondes, pendant lesquels des véhicules apparaissent et le
+réseau est mis à jour. Les statistiques sont enregistrées à chaque tour.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_tours</strong> (<em>int</em>) – Nombre de tours.</p></li>
+<li><p><strong>delta_t</strong> (<em>float</em>) – Durée d’un tour (s).</p></li>
+<li><p><strong>intervalle_affichage</strong> (<em>int</em>) – Affiche l’état tous les N tours.</p></li>
+<li><p><strong>exporter</strong> (<em>bool</em>) – Exporte les résultats en CSV/JSON.</p></li>
+<li><p><strong>graphiques</strong> (<em>bool</em>) – Génère les graphiques PNG.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Résumé de la simulation (voir <code class="xref py py-meth docutils literal notranslate"><span class="pre">Analyseur.resume()</span></code>).</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-core.analyseur">
+<span id="analyseur"></span><h2>Analyseur<a class="headerlink" href="#module-core.analyseur" title="Lien vers cette rubrique"></a></h2>
+<p>Calcul des statistiques : vitesses, congestion, temps de parcours.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.analyseur.Analyseur">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">core.analyseur.</span></span><span class="sig-name descname"><span class="pre">Analyseur</span></span><a class="reference internal" href="../_modules/core/analyseur.html#Analyseur"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.analyseur.Analyseur" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Collecte et analyse les données de simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>historique</strong> (<em>list</em><em>[</em><em>dict</em><em>]</em>) – Un enregistrement global par tour
+(temps, nombre de véhicules, vitesse moyenne, part d’arrêtés…).</p></li>
+<li><p><strong>historique_routes</strong> (<em>list</em><em>[</em><em>dict</em><em>]</em>) – Un enregistrement par route et par
+tour (occupation, vitesse moyenne, ratio à la limite).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.analyseur.Analyseur.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/analyseur.html#Analyseur.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.analyseur.Analyseur.__init__" title="Lien vers cette définition"></a></dt>
+<dd><p>Crée un analyseur vide.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.analyseur.Analyseur.enregistrer">
+<span class="sig-name descname"><span class="pre">enregistrer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reseau</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/analyseur.html#Analyseur.enregistrer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.analyseur.Analyseur.enregistrer" title="Lien vers cette définition"></a></dt>
+<dd><p>Enregistre l’état du réseau à un instant donné.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>temps</strong> (<em>float</em>) – Temps de simulation (s).</p></li>
+<li><p><strong>reseau</strong> (<a class="reference internal" href="models.html#models.reseau.ReseauRoutier" title="models.reseau.ReseauRoutier"><em>ReseauRoutier</em></a>) – Réseau à observer.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.analyseur.Analyseur.vitesse_moyenne_globale">
+<span class="sig-name descname"><span class="pre">vitesse_moyenne_globale</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/analyseur.html#Analyseur.vitesse_moyenne_globale"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.analyseur.Analyseur.vitesse_moyenne_globale" title="Lien vers cette définition"></a></dt>
+<dd><p>Calcule la vitesse moyenne sur toute la simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Moyenne en km/h de toutes les observations véhicule/tour,
+0 si aucune observation.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.analyseur.Analyseur.occupation_moyenne_par_route">
+<span class="sig-name descname"><span class="pre">occupation_moyenne_par_route</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/analyseur.html#Analyseur.occupation_moyenne_par_route"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.analyseur.Analyseur.occupation_moyenne_par_route" title="Lien vers cette définition"></a></dt>
+<dd><p>Calcule le taux d’occupation moyen de chaque route.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Occupation moyenne (entre 0 et 1) par route.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.analyseur.Analyseur.vitesse_moyenne_par_route">
+<span class="sig-name descname"><span class="pre">vitesse_moyenne_par_route</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/analyseur.html#Analyseur.vitesse_moyenne_par_route"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.analyseur.Analyseur.vitesse_moyenne_par_route" title="Lien vers cette définition"></a></dt>
+<dd><p>Calcule la vitesse moyenne de chaque route, instants vides exclus.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Vitesse moyenne en km/h par route.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.analyseur.Analyseur.zones_congestion">
+<span class="sig-name descname"><span class="pre">zones_congestion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seuil_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.35</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequence_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/analyseur.html#Analyseur.zones_congestion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.analyseur.Analyseur.zones_congestion" title="Lien vers cette définition"></a></dt>
+<dd><p>Détecte les routes congestionnées.</p>
+<p>Une route est congestionnée à un instant donné si elle contient au moins
+2 véhicules et que leur vitesse moyenne est inférieure à
+<code class="docutils literal notranslate"><span class="pre">seuil_ratio</span></code> fois la limite. C’est une zone de congestion si cela
+dure au moins <code class="docutils literal notranslate"><span class="pre">frequence_min</span></code> de la simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seuil_ratio</strong> (<em>float</em>) – Ratio vitesse/limite sous lequel la route est
+jugée congestionnée. Défaut : 0.35.</p></li>
+<li><p><strong>frequence_min</strong> (<em>float</em>) – Fraction minimale du temps en congestion.
+Défaut : 0.2.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Zones triées par fréquence décroissante, avec les clés
+<code class="docutils literal notranslate"><span class="pre">route</span></code>, <code class="docutils literal notranslate"><span class="pre">frequence</span></code>, <code class="docutils literal notranslate"><span class="pre">occupation_moyenne</span></code> et
+<code class="docutils literal notranslate"><span class="pre">vitesse_moyenne_kmh</span></code>.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.analyseur.Analyseur.temps_parcours">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">temps_parcours</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vehicules_termines</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/analyseur.html#Analyseur.temps_parcours"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.analyseur.Analyseur.temps_parcours" title="Lien vers cette définition"></a></dt>
+<dd><p>Calcule les statistiques de temps de parcours.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vehicules_termines</strong> (<em>list</em><em>[</em><a class="reference internal" href="models.html#models.vehicule.Vehicule" title="models.vehicule.Vehicule"><em>Vehicule</em></a><em>]</em>) – Véhicules arrivés.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Clés <code class="docutils literal notranslate"><span class="pre">nombre</span></code>, <code class="docutils literal notranslate"><span class="pre">moyen_s</span></code>, <code class="docutils literal notranslate"><span class="pre">median_s</span></code>, <code class="docutils literal notranslate"><span class="pre">min_s</span></code> et
+<code class="docutils literal notranslate"><span class="pre">max_s</span></code> (secondes ; 0 si aucun véhicule n’est arrivé).</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.analyseur.Analyseur.resume">
+<span class="sig-name descname"><span class="pre">resume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reseau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duree_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/analyseur.html#Analyseur.resume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.analyseur.Analyseur.resume" title="Lien vers cette définition"></a></dt>
+<dd><p>Produit le résumé final de la simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reseau</strong> (<a class="reference internal" href="models.html#models.reseau.ReseauRoutier" title="models.reseau.ReseauRoutier"><em>ReseauRoutier</em></a>) – Réseau simulé.</p></li>
+<li><p><strong>duree_s</strong> (<em>float</em>) – Durée simulée (s).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Résumé sérialisable en JSON (véhicules créés/arrivés, vitesse
+globale, temps de parcours, zones de congestion).</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="models.html" class="btn btn-neutral float-left" title="Paquet models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="out.html" class="btn btn-neutral float-right" title="Paquet out" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Droits d'auteur .</p>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

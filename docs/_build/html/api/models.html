@@ -1,0 +1,716 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paquet models &mdash; Documentation Simulateur de trafic 1.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=7a28dfa3"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/translations.js?v=e6b791cb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+    <link rel="next" title="Paquet core" href="core.html" />
+    <link rel="prev" title="Référence de l’API" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Simulateur de trafic
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Sommaire</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../guide.html">Guide d’utilisation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Référence de l’API</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Paquet <code class="docutils literal notranslate"><span class="pre">models</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-models.vehicule">Véhicule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#models.vehicule.Vehicule"><code class="docutils literal notranslate"><span class="pre">Vehicule</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-models.route">Route</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#models.route.Route"><code class="docutils literal notranslate"><span class="pre">Route</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-models.reseau">Réseau routier</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#models.reseau.Intersection"><code class="docutils literal notranslate"><span class="pre">Intersection</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#models.reseau.ReseauRoutier"><code class="docutils literal notranslate"><span class="pre">ReseauRoutier</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core.html">Paquet <code class="docutils literal notranslate"><span class="pre">core</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="out.html">Paquet <code class="docutils literal notranslate"><span class="pre">out</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Simulateur de trafic</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Référence de l’API</a></li>
+      <li class="breadcrumb-item active">Paquet <code class="docutils literal notranslate"><span class="pre">models</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/models.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-models">
+<span id="paquet-models"></span><h1>Paquet <code class="docutils literal notranslate"><span class="pre">models</span></code><a class="headerlink" href="#module-models" title="Lien vers cette rubrique"></a></h1>
+<p>Modèles métier du simulateur.</p>
+<p>Ce paquet contient les trois entités de base : <a class="reference internal" href="#models.vehicule.Vehicule" title="models.vehicule.Vehicule"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vehicule</span></code></a>,
+<a class="reference internal" href="#models.route.Route" title="models.route.Route"><code class="xref py py-class docutils literal notranslate"><span class="pre">Route</span></code></a> et <a class="reference internal" href="#models.reseau.ReseauRoutier" title="models.reseau.ReseauRoutier"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReseauRoutier</span></code></a>.</p>
+<section id="module-models.vehicule">
+<span id="vehicule"></span><h2>Véhicule<a class="headerlink" href="#module-models.vehicule" title="Lien vers cette rubrique"></a></h2>
+<p>Modèle d’un véhicule.</p>
+<p>Toutes les grandeurs sont exprimées en unités SI : mètres, secondes et m/s
+(sauf mention contraire).</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="models.vehicule.Vehicule">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">models.vehicule.</span></span><span class="sig-name descname"><span class="pre">Vehicule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifiant</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">itineraire</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temps_creation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/vehicule.html#Vehicule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.vehicule.Vehicule" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Véhicule circulant sur le réseau.</p>
+<p>Un véhicule suit un itinéraire (liste ordonnée de noms de routes) et se trouve
+à tout instant sur une route à une certaine position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>LONGUEUR</strong> (<em>float</em>) – Longueur d’un véhicule en mètres.</p></li>
+<li><p><strong>identifiant</strong> (<em>str</em>) – Identifiant unique du véhicule.</p></li>
+<li><p><strong>itineraire</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Noms des routes à emprunter, dans l’ordre.</p></li>
+<li><p><strong>index_route</strong> (<em>int</em>) – Indice, dans l’itinéraire, de la route actuelle.</p></li>
+<li><p><strong>route_actuelle</strong> (<a class="reference internal" href="#models.route.Route" title="models.route.Route"><em>Route</em></a><em> | </em><em>None</em>) – Route sur laquelle se trouve le véhicule.</p></li>
+<li><p><strong>position</strong> (<em>float</em>) – Distance parcourue depuis le début de la route (m).</p></li>
+<li><p><strong>vitesse</strong> (<em>float</em>) – Vitesse instantanée (m/s).</p></li>
+<li><p><strong>temps_creation</strong> (<em>float</em>) – Instant d’apparition (s).</p></li>
+<li><p><strong>temps_arrivee</strong> (<em>float</em><em> | </em><em>None</em>) – Instant d’arrivée à destination (s).</p></li>
+<li><p><strong>distance_parcourue</strong> (<em>float</em>) – Distance totale parcourue (m).</p></li>
+<li><p><strong>temps_arret</strong> (<em>float</em>) – Temps cumulé passé à l’arrêt (s).</p></li>
+<li><p><strong>arrive</strong> (<em>bool</em>) – <code class="docutils literal notranslate"><span class="pre">True</span></code> une fois la destination atteinte.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.vehicule.Vehicule.LONGUEUR">
+<span class="sig-name descname"><span class="pre">LONGUEUR</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5.0</span></span><a class="headerlink" href="#models.vehicule.Vehicule.LONGUEUR" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.vehicule.Vehicule.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifiant</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">itineraire</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temps_creation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/vehicule.html#Vehicule.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.vehicule.Vehicule.__init__" title="Lien vers cette définition"></a></dt>
+<dd><p>Crée un véhicule non encore placé sur une route.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>identifiant</strong> (<em>str</em>) – Identifiant unique.</p></li>
+<li><p><strong>itineraire</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Noms des routes à emprunter, dans l’ordre.</p></li>
+<li><p><strong>temps_creation</strong> (<em>float</em>) – Instant de création en secondes. Défaut : 0.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.vehicule.Vehicule.avancer">
+<span class="sig-name descname"><span class="pre">avancer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delta_t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vitesse_cible</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limite_position</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/vehicule.html#Vehicule.avancer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.vehicule.Vehicule.avancer" title="Lien vers cette définition"></a></dt>
+<dd><p>Fait avancer le véhicule pendant <code class="docutils literal notranslate"><span class="pre">delta_t</span></code> secondes.</p>
+<p>Le déplacement est borné par <code class="docutils literal notranslate"><span class="pre">limite_position</span></code> (fin de route ou pare-chocs
+du véhicule qui précède) ; le véhicule ne recule jamais. La vitesse
+instantanée est mise à jour, et le temps d’arrêt cumulé augmente si elle
+est inférieure à 0,5 m/s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>delta_t</strong> (<em>float</em>) – Durée du pas de temps (s), strictement positive.</p></li>
+<li><p><strong>vitesse_cible</strong> (<em>float</em>) – Vitesse souhaitée (m/s).</p></li>
+<li><p><strong>limite_position</strong> (<em>float</em>) – Position maximale autorisée sur la route (m).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.vehicule.Vehicule.route_suivante">
+<span class="sig-name descname"><span class="pre">route_suivante</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/vehicule.html#Vehicule.route_suivante"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.vehicule.Vehicule.route_suivante" title="Lien vers cette définition"></a></dt>
+<dd><p>Donne la prochaine route de l’itinéraire.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Nom de la route suivante, ou <code class="docutils literal notranslate"><span class="pre">None</span></code> si le véhicule est
+sur la dernière route de son itinéraire.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>str | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.vehicule.Vehicule.changer_de_route">
+<span class="sig-name descname"><span class="pre">changer_de_route</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nouvelle_route</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/vehicule.html#Vehicule.changer_de_route"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.vehicule.Vehicule.changer_de_route" title="Lien vers cette définition"></a></dt>
+<dd><p>Fait passer le véhicule sur une nouvelle route.</p>
+<p>Le véhicule est retiré de sa route actuelle, placé au début de
+<code class="docutils literal notranslate"><span class="pre">nouvelle_route</span></code> et son index d’itinéraire est incrémenté. Rien n’est
+modifié si la nouvelle route n’a pas de place à l’entrée.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>nouvelle_route</strong> (<a class="reference internal" href="#models.route.Route" title="models.route.Route"><em>Route</em></a>) – Route de destination.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> si le changement a eu lieu, <code class="docutils literal notranslate"><span class="pre">False</span></code> si la route est
+saturée.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.vehicule.Vehicule.temps_parcours">
+<span class="sig-name descname"><span class="pre">temps_parcours</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/vehicule.html#Vehicule.temps_parcours"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.vehicule.Vehicule.temps_parcours" title="Lien vers cette définition"></a></dt>
+<dd><p>Calcule la durée totale du trajet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Temps de parcours en secondes, ou <code class="docutils literal notranslate"><span class="pre">None</span></code> si le
+véhicule n’est pas encore arrivé.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>float | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-models.route">
+<span id="route"></span><h2>Route<a class="headerlink" href="#module-models.route" title="Lien vers cette rubrique"></a></h2>
+<p>Modèle d’une route.</p>
+<p>Une route est un tronçon orienté reliant deux intersections. Elle gère la
+file des véhicules présents et leur déplacement sans collision.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="models.route.Route">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">models.route.</span></span><span class="sig-name descname"><span class="pre">Route</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longueur</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limite_vitesse</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/route.html#Route"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.route.Route" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Tronçon routier orienté à une seule voie.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ECART_MIN</strong> (<em>float</em>) – Distance minimale entre deux pare-chocs avant (m).</p></li>
+<li><p><strong>nom</strong> (<em>str</em>) – Nom unique de la route.</p></li>
+<li><p><strong>longueur</strong> (<em>float</em>) – Longueur (m).</p></li>
+<li><p><strong>limite_vitesse</strong> (<em>float</em>) – Vitesse maximale autorisée (km/h).</p></li>
+<li><p><strong>origine</strong> (<em>str</em>) – Identifiant de l’intersection de départ.</p></li>
+<li><p><strong>destination</strong> (<em>str</em>) – Identifiant de l’intersection d’arrivée.</p></li>
+<li><p><strong>vehicules</strong> (<em>list</em><em>[</em><a class="reference internal" href="#models.vehicule.Vehicule" title="models.vehicule.Vehicule"><em>Vehicule</em></a><em>]</em>) – Véhicules actuellement présents.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.route.Route.ECART_MIN">
+<span class="sig-name descname"><span class="pre">ECART_MIN</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7.0</span></span><a class="headerlink" href="#models.route.Route.ECART_MIN" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.route.Route.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longueur</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limite_vitesse</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/route.html#Route.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.route.Route.__init__" title="Lien vers cette définition"></a></dt>
+<dd><p>Crée une route vide.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nom</strong> (<em>str</em>) – Nom unique de la route.</p></li>
+<li><p><strong>longueur</strong> (<em>float</em>) – Longueur en mètres (&gt; 0).</p></li>
+<li><p><strong>limite_vitesse</strong> (<em>float</em>) – Limite de vitesse en km/h (&gt; 0).</p></li>
+<li><p><strong>origine</strong> (<em>str</em>) – Identifiant de l’intersection de départ.</p></li>
+<li><p><strong>destination</strong> (<em>str</em>) – Identifiant de l’intersection d’arrivée.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Si la longueur ou la limite de vitesse n’est pas positive.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="models.route.Route.capacite">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">capacite</span></span><a class="headerlink" href="#models.route.Route.capacite" title="Lien vers cette définition"></a></dt>
+<dd><p>Nombre maximal de véhicules que la route peut contenir
+(<code class="docutils literal notranslate"><span class="pre">longueur</span> <span class="pre">//</span> <span class="pre">ECART_MIN</span></code>, au moins 1).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="models.route.Route.taux_occupation">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">taux_occupation</span></span><a class="headerlink" href="#models.route.Route.taux_occupation" title="Lien vers cette définition"></a></dt>
+<dd><p>Rapport entre le nombre de véhicules présents et la capacité,
+compris entre 0 et 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.route.Route.vitesse_moyenne_kmh">
+<span class="sig-name descname"><span class="pre">vitesse_moyenne_kmh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/route.html#Route.vitesse_moyenne_kmh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.route.Route.vitesse_moyenne_kmh" title="Lien vers cette définition"></a></dt>
+<dd><p>Calcule la vitesse instantanée moyenne des véhicules présents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Vitesse moyenne en km/h, ou <code class="docutils literal notranslate"><span class="pre">None</span></code> si la route est vide.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>float | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.route.Route.a_de_la_place">
+<span class="sig-name descname"><span class="pre">a_de_la_place</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/route.html#Route.a_de_la_place"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.route.Route.a_de_la_place" title="Lien vers cette définition"></a></dt>
+<dd><p>Indique si un véhicule peut entrer sur la route.</p>
+<p>Il faut que la capacité ne soit pas atteinte et que le dernier véhicule
+entré se soit éloigné d’au moins <code class="docutils literal notranslate"><span class="pre">ECART_MIN</span></code> de l’entrée.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> si l’entrée est possible.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.route.Route.ajouter_vehicule">
+<span class="sig-name descname"><span class="pre">ajouter_vehicule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vehicule</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/route.html#Route.ajouter_vehicule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.route.Route.ajouter_vehicule" title="Lien vers cette définition"></a></dt>
+<dd><p>Place un véhicule au début de la route.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vehicule</strong> (<a class="reference internal" href="#models.vehicule.Vehicule" title="models.vehicule.Vehicule"><em>Vehicule</em></a>) – Véhicule à ajouter.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> si le véhicule a été ajouté, <code class="docutils literal notranslate"><span class="pre">False</span></code> si la route est
+saturée à l’entrée.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.route.Route.retirer_vehicule">
+<span class="sig-name descname"><span class="pre">retirer_vehicule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vehicule</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/route.html#Route.retirer_vehicule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.route.Route.retirer_vehicule" title="Lien vers cette définition"></a></dt>
+<dd><p>Retire un véhicule de la route.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vehicule</strong> (<a class="reference internal" href="#models.vehicule.Vehicule" title="models.vehicule.Vehicule"><em>Vehicule</em></a>) – Véhicule à retirer.</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Si le véhicule n’est pas sur cette route.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.route.Route.vitesse_desiree">
+<span class="sig-name descname"><span class="pre">vitesse_desiree</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/route.html#Route.vitesse_desiree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.route.Route.vitesse_desiree" title="Lien vers cette définition"></a></dt>
+<dd><p>Calcule la vitesse souhaitée selon le niveau de remplissage.</p>
+<p>Modèle de Greenshields simplifié : la vitesse décroît linéairement de la
+limite (route vide) jusqu’à 5 % de celle-ci (route pleine).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Vitesse cible en m/s.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.route.Route.mettre_a_jour_vehicules">
+<span class="sig-name descname"><span class="pre">mettre_a_jour_vehicules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delta_t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/route.html#Route.mettre_a_jour_vehicules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.route.Route.mettre_a_jour_vehicules" title="Lien vers cette définition"></a></dt>
+<dd><p>Fait avancer tous les véhicules de la route.</p>
+<p>Les véhicules sont traités du plus avancé au moins avancé ; chacun est
+borné par le pare-chocs de celui qui le précède, ce qui interdit tout
+dépassement et toute collision.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>delta_t</strong> (<em>float</em>) – Durée du pas de temps (s).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.route.Route.tete_de_file">
+<span class="sig-name descname"><span class="pre">tete_de_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/route.html#Route.tete_de_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.route.Route.tete_de_file" title="Lien vers cette définition"></a></dt>
+<dd><p>Retourne le véhicule arrivé au bout de la route, le cas échéant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Véhicule en tête s’il a atteint la fin de la route,
+sinon <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#models.vehicule.Vehicule" title="models.vehicule.Vehicule">Vehicule</a> | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-models.reseau">
+<span id="reseau-routier"></span><h2>Réseau routier<a class="headerlink" href="#module-models.reseau" title="Lien vers cette rubrique"></a></h2>
+<p>Réseau routier : routes, intersections (avec feux) et logique globale.</p>
+<p>Le réseau est un graphe orienté dont les nœuds sont des
+<a class="reference internal" href="#models.reseau.Intersection" title="models.reseau.Intersection"><code class="xref py py-class docutils literal notranslate"><span class="pre">Intersection</span></code></a> et les arêtes des <a class="reference internal" href="#models.route.Route" title="models.route.Route"><code class="xref py py-class docutils literal notranslate"><span class="pre">Route</span></code></a>.
+Il est généralement construit à partir d’un fichier JSON
+(<a class="reference internal" href="#models.reseau.ReseauRoutier.from_json" title="models.reseau.ReseauRoutier.from_json"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ReseauRoutier.from_json()</span></code></a>).</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="models.reseau.Intersection">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">models.reseau.</span></span><span class="sig-name descname"><span class="pre">Intersection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifiant</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phases</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/reseau.html#Intersection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.reseau.Intersection" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Nœud du réseau, éventuellement régulé par des feux tricolores.</p>
+<p>Les feux fonctionnent par phases : pendant une phase, seules les routes
+entrantes listées sont au vert. Sans phases, l’intersection est libre.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>identifiant</strong> (<em>str</em>) – Identifiant unique.</p></li>
+<li><p><strong>x</strong> (<em>float</em>) – Abscisse (pour la cartographie).</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Ordonnée (pour la cartographie).</p></li>
+<li><p><strong>phases</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>frozenset</em><em>[</em><em>str</em><em>]</em><em>, </em><em>float</em><em>]</em><em>]</em>) – Couples
+(routes au vert, durée en secondes).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="models.reseau.Intersection.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifiant</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phases</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/reseau.html#Intersection.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.reseau.Intersection.__init__" title="Lien vers cette définition"></a></dt>
+<dd><p>Crée une intersection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>identifiant</strong> (<em>str</em>) – Identifiant unique.</p></li>
+<li><p><strong>x</strong> (<em>float</em>) – Abscisse. Défaut : 0.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Ordonnée. Défaut : 0.</p></li>
+<li><p><strong>phases</strong> (<em>list</em><em>[</em><em>dict</em><em>] </em><em>| </em><em>None</em>) – Phases de feux, chaque phase étant un
+dictionnaire <code class="docutils literal notranslate"><span class="pre">{&quot;routes&quot;:</span> <span class="pre">[...],</span> <span class="pre">&quot;duree&quot;:</span> <span class="pre">secondes}</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="models.reseau.Intersection.cycle">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cycle</span></span><a class="headerlink" href="#models.reseau.Intersection.cycle" title="Lien vers cette définition"></a></dt>
+<dd><p>Durée totale d’un cycle de feux (s), 0 sans feux.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="models.reseau.Intersection.a_des_feux">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">a_des_feux</span></span><a class="headerlink" href="#models.reseau.Intersection.a_des_feux" title="Lien vers cette définition"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">True</span></code> si l’intersection est régulée par des feux.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.reseau.Intersection.est_vert">
+<span class="sig-name descname"><span class="pre">est_vert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nom_route</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temps</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/reseau.html#Intersection.est_vert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.reseau.Intersection.est_vert" title="Lien vers cette définition"></a></dt>
+<dd><p>Indique si une route entrante peut passer à l’instant donné.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nom_route</strong> (<em>str</em>) – Nom de la route entrante.</p></li>
+<li><p><strong>temps</strong> (<em>float</em>) – Temps de simulation (s).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> si le feu est vert, ou si la route n’est concernée
+par aucune phase (passage libre).</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="models.reseau.ReseauRoutier">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">models.reseau.</span></span><span class="sig-name descname"><span class="pre">ReseauRoutier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points_entree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/reseau.html#ReseauRoutier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.reseau.ReseauRoutier" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Ensemble des routes et intersections, et dynamique globale du trafic.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>routes</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="#models.route.Route" title="models.route.Route"><em>Route</em></a><em>]</em>) – Routes indexées par nom.</p></li>
+<li><p><strong>intersections</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="#models.reseau.Intersection" title="models.reseau.Intersection"><em>Intersection</em></a><em>]</em>) – Intersections indexées par id.</p></li>
+<li><p><strong>points_entree</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Routes où apparaissent les véhicules
+(toutes les routes si la liste est vide).</p></li>
+<li><p><strong>termines</strong> (<em>list</em><em>[</em><a class="reference internal" href="#models.vehicule.Vehicule" title="models.vehicule.Vehicule"><em>Vehicule</em></a><em>]</em>) – Véhicules arrivés à destination.</p></li>
+<li><p><strong>nb_crees</strong> (<em>int</em>) – Nombre total de véhicules créés.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="models.reseau.ReseauRoutier.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points_entree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/reseau.html#ReseauRoutier.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.reseau.ReseauRoutier.__init__" title="Lien vers cette définition"></a></dt>
+<dd><p>Crée un réseau vide.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>points_entree</strong> (<em>list</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>) – Noms des routes d’entrée.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.reseau.ReseauRoutier.from_dict">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/reseau.html#ReseauRoutier.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.reseau.ReseauRoutier.from_dict" title="Lien vers cette définition"></a></dt>
+<dd><p>Construit un réseau à partir d’un dictionnaire de configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>dict</em>) – Dictionnaire avec les clés <code class="docutils literal notranslate"><span class="pre">intersections</span></code>,
+<code class="docutils literal notranslate"><span class="pre">routes</span></code> et, optionnellement, <code class="docutils literal notranslate"><span class="pre">generation</span></code>.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Réseau construit.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#models.reseau.ReseauRoutier" title="models.reseau.ReseauRoutier">ReseauRoutier</a></p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – Si une route est dupliquée ou si un point d’entrée est
+    inconnu.</p></li>
+<li><p><strong>KeyError</strong> – Si une clé obligatoire est absente.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.reseau.ReseauRoutier.from_json">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chemin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/reseau.html#ReseauRoutier.from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.reseau.ReseauRoutier.from_json" title="Lien vers cette définition"></a></dt>
+<dd><p>Construit un réseau à partir d’un fichier JSON.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>chemin</strong> (<em>str</em>) – Chemin du fichier de configuration.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Réseau construit.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#models.reseau.ReseauRoutier" title="models.reseau.ReseauRoutier">ReseauRoutier</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.reseau.ReseauRoutier.ajouter_intersection">
+<span class="sig-name descname"><span class="pre">ajouter_intersection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/reseau.html#ReseauRoutier.ajouter_intersection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.reseau.ReseauRoutier.ajouter_intersection" title="Lien vers cette définition"></a></dt>
+<dd><p>Ajoute (ou remplace) une intersection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inter</strong> (<a class="reference internal" href="#models.reseau.Intersection" title="models.reseau.Intersection"><em>Intersection</em></a>) – Intersection à ajouter.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.reseau.ReseauRoutier.ajouter_route">
+<span class="sig-name descname"><span class="pre">ajouter_route</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">route</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/reseau.html#ReseauRoutier.ajouter_route"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.reseau.ReseauRoutier.ajouter_route" title="Lien vers cette définition"></a></dt>
+<dd><p>Ajoute une route, en créant ses intersections si nécessaire.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>route</strong> (<a class="reference internal" href="#models.route.Route" title="models.route.Route"><em>Route</em></a>) – Route à ajouter.</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Si une route de même nom existe déjà.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.reseau.ReseauRoutier.routes_suivantes">
+<span class="sig-name descname"><span class="pre">routes_suivantes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nom_route</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/reseau.html#ReseauRoutier.routes_suivantes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.reseau.ReseauRoutier.routes_suivantes" title="Lien vers cette définition"></a></dt>
+<dd><p>Liste les routes qu’un véhicule peut emprunter après une route donnée.</p>
+<p>Les demi-tours sont exclus. Le graphe est mis en cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>nom_route</strong> (<em>str</em>) – Nom de la route actuelle.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Noms des routes accessibles.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.reseau.ReseauRoutier.itineraire_aleatoire">
+<span class="sig-name descname"><span class="pre">itineraire_aleatoire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depart</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/reseau.html#ReseauRoutier.itineraire_aleatoire"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.reseau.ReseauRoutier.itineraire_aleatoire" title="Lien vers cette définition"></a></dt>
+<dd><p>Choisit une destination au hasard et calcule le plus court chemin.</p>
+<p>Le calcul est un parcours en largeur (BFS) sur le graphe des routes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rng</strong> (<em>random.Random</em>) – Générateur pseudo-aléatoire.</p></li>
+<li><p><strong>depart</strong> (<em>str</em>) – Nom de la route de départ.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Itinéraire, du départ à la destination incluse. Réduit à
+<code class="docutils literal notranslate"><span class="pre">[depart]</span></code> si aucune autre route n’est atteignable.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="models.reseau.ReseauRoutier.vehicules">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">vehicules</span></span><a class="headerlink" href="#models.reseau.ReseauRoutier.vehicules" title="Lien vers cette définition"></a></dt>
+<dd><p>Tous les véhicules actuellement en circulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="#models.vehicule.Vehicule" title="models.vehicule.Vehicule">Vehicule</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.reseau.ReseauRoutier.generer_vehicule">
+<span class="sig-name descname"><span class="pre">generer_vehicule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">candidates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/reseau.html#ReseauRoutier.generer_vehicule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.reseau.ReseauRoutier.generer_vehicule" title="Lien vers cette définition"></a></dt>
+<dd><p>Crée un véhicule sur une route d’entrée tirée au hasard.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rng</strong> (<em>random.Random</em>) – Générateur pseudo-aléatoire.</p></li>
+<li><p><strong>temps</strong> (<em>float</em>) – Temps de simulation courant (s).</p></li>
+<li><p><strong>candidates</strong> (<em>list</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>) – Routes candidates ; par défaut les
+points d’entrée, ou toutes les routes s’il n’y en a pas.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Véhicule créé, ou <code class="docutils literal notranslate"><span class="pre">None</span></code> si la route choisie est
+saturée à l’entrée.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#models.vehicule.Vehicule" title="models.vehicule.Vehicule">Vehicule</a> | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.reseau.ReseauRoutier.mettre_a_jour">
+<span class="sig-name descname"><span class="pre">mettre_a_jour</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delta_t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temps</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/reseau.html#ReseauRoutier.mettre_a_jour"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.reseau.ReseauRoutier.mettre_a_jour" title="Lien vers cette définition"></a></dt>
+<dd><p>Exécute un pas de simulation.</p>
+<p>Étape 1 : chaque route fait avancer ses véhicules. Étape 2 : le véhicule
+en tête de chaque route sort du réseau s’il est arrivé, ou passe sur la
+route suivante si le feu est vert et qu’il y a de la place.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>delta_t</strong> (<em>float</em>) – Durée du pas (s).</p></li>
+<li><p><strong>temps</strong> (<em>float</em>) – Temps de simulation au début du pas (s).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="modules.html" class="btn btn-neutral float-left" title="Référence de l’API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="core.html" class="btn btn-neutral float-right" title="Paquet core" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Droits d'auteur .</p>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,226 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core.simulateur &mdash; Documentation Simulateur de trafic 1.0</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=7a28dfa3"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Simulateur de trafic
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Sommaire</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../guide.html">Guide d’utilisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">Référence de l’API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Simulateur de trafic</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">core.simulateur</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de core.simulateur</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Simulateur : charge la configuration et pilote la boucle temporelle."""</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">models.reseau</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReseauRoutier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core.analyseur</span><span class="w"> </span><span class="kn">import</span> <span class="n">Analyseur</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">out</span><span class="w"> </span><span class="kn">import</span> <span class="n">affichage</span><span class="p">,</span> <span class="n">export</span>
+
+
+<div class="viewcode-block" id="Simulateur">
+<a class="viewcode-back" href="../../api/core.html#core.simulateur.Simulateur">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Simulateur</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Orchestrateur de la simulation.</span>
+
+<span class="sd">    Exemple:</span>
+<span class="sd">        &gt;&gt;&gt; simu = Simulateur(fichier_config="data/config_reseau.json")</span>
+<span class="sd">        &gt;&gt;&gt; resume = simu.lancer_simulation(n_tours=60, delta_t=60)</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        config (dict): Configuration chargée.</span>
+<span class="sd">        reseau (ReseauRoutier): Réseau simulé.</span>
+<span class="sd">        analyseur (Analyseur): Collecteur de statistiques.</span>
+<span class="sd">        rng (random.Random): Générateur pseudo-aléatoire (graine ``seed``).</span>
+<span class="sd">        taux_apparition (float): Véhicules créés par minute.</span>
+<span class="sd">        sous_pas (float): Durée maximale d'un sous-pas de calcul (s).</span>
+<span class="sd">        temps (float): Temps de simulation courant (s).</span>
+<span class="sd">        resume (dict | None): Résumé final, disponible après la simulation.</span>
+<span class="sd">    """</span>
+<div class="viewcode-block" id="Simulateur.__init__">
+<a class="viewcode-back" href="../../api/core.html#core.simulateur.Simulateur.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fichier_config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">afficher</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">dossier_sortie</span><span class="o">=</span><span class="s2">"out/resultats"</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Initialise le simulateur.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fichier_config (str | None): Chemin d'un fichier JSON de configuration.</span>
+<span class="sd">            config (dict | None): Configuration déjà chargée (prioritaire).</span>
+<span class="sd">            afficher (bool): Affiche l'état et le rapport en console.</span>
+<span class="sd">            dossier_sortie (str): Dossier des exports et graphiques.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: Si ni ``fichier_config`` ni ``config`` n'est fourni.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">fichier_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Fournir fichier_config ou config"</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fichier_config</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">gen</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"generation"</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reseau</span> <span class="o">=</span> <span class="n">ReseauRoutier</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">analyseur</span> <span class="o">=</span> <span class="n">Analyseur</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">(</span><span class="n">gen</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"seed"</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vehicules_initiaux</span> <span class="o">=</span> <span class="n">gen</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"vehicules_initiaux"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">taux_apparition</span> <span class="o">=</span> <span class="n">gen</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"taux_apparition"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># véhicules/min</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sous_pas</span> <span class="o">=</span> <span class="n">gen</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"sous_pas"</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>                  <span class="c1"># s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">afficher</span> <span class="o">=</span> <span class="n">afficher</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dossier_sortie</span> <span class="o">=</span> <span class="n">dossier_sortie</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temps</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resume</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duree</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Fait apparaître des véhicules sur la durée donnée.</span>
+
+<span class="sd">        Le nombre attendu est ``taux_apparition * duree / 60`` ; sa partie</span>
+<span class="sd">        fractionnaire est tirée au sort.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            duree (float): Durée écoulée (s).</span>
+<span class="sd">        """</span>
+        <span class="n">attendu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taux_apparition</span> <span class="o">*</span> <span class="n">duree</span> <span class="o">/</span> <span class="mi">60</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">attendu</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">attendu</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">attendu</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reseau</span><span class="o">.</span><span class="n">generer_vehicule</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">temps</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Simulateur.lancer_simulation">
+<a class="viewcode-back" href="../../api/core.html#core.simulateur.Simulateur.lancer_simulation">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">lancer_simulation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_tours</span><span class="p">,</span> <span class="n">delta_t</span><span class="p">,</span> <span class="n">intervalle_affichage</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                          <span class="n">exporter</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">graphiques</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Lance la simulation.</span>
+
+<span class="sd">        Chaque tour de ``delta_t`` secondes est découpé en sous-pas d'au plus</span>
+<span class="sd">        ``sous_pas`` secondes, pendant lesquels des véhicules apparaissent et le</span>
+<span class="sd">        réseau est mis à jour. Les statistiques sont enregistrées à chaque tour.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_tours (int): Nombre de tours.</span>
+<span class="sd">            delta_t (float): Durée d'un tour (s).</span>
+<span class="sd">            intervalle_affichage (int): Affiche l'état tous les N tours.</span>
+<span class="sd">            exporter (bool): Exporte les résultats en CSV/JSON.</span>
+<span class="sd">            graphiques (bool): Génère les graphiques PNG.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Résumé de la simulation (voir :meth:`Analyseur.resume`).</span>
+<span class="sd">        """</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicules_initiaux</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reseau</span><span class="o">.</span><span class="n">generer_vehicule</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">temps</span><span class="p">,</span>
+                                         <span class="n">candidates</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reseau</span><span class="o">.</span><span class="n">routes</span><span class="p">))</span>
+        <span class="n">n_sous</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">delta_t</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">sous_pas</span><span class="p">))</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">delta_t</span> <span class="o">/</span> <span class="n">n_sous</span>
+
+        <span class="k">for</span> <span class="n">tour</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_tours</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_sous</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_generer</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reseau</span><span class="o">.</span><span class="n">mettre_a_jour</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">temps</span> <span class="o">+</span> <span class="n">k</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">temps</span> <span class="o">+=</span> <span class="n">delta_t</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">analyseur</span><span class="o">.</span><span class="n">enregistrer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">temps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reseau</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">afficher</span> <span class="ow">and</span> <span class="p">(</span><span class="n">tour</span> <span class="o">%</span> <span class="n">intervalle_affichage</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">tour</span> <span class="o">==</span> <span class="n">n_tours</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">affichage</span><span class="o">.</span><span class="n">afficher_etat_console</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">temps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reseau</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">analyseur</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">resume</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">analyseur</span><span class="o">.</span><span class="n">resume</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reseau</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">temps</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">afficher</span><span class="p">:</span>
+            <span class="n">affichage</span><span class="o">.</span><span class="n">afficher_resume</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resume</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">exporter</span><span class="p">:</span>
+            <span class="n">export</span><span class="o">.</span><span class="n">exporter_tout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dossier_sortie</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">graphiques</span><span class="p">:</span>
+            <span class="n">affichage</span><span class="o">.</span><span class="n">tracer_tout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dossier_sortie</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">resume</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Droits d'auteur .</p>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

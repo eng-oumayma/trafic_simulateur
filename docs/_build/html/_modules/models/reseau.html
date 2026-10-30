@@ -1,0 +1,415 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>models.reseau &mdash; Documentation Simulateur de trafic 1.0</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=7a28dfa3"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Simulateur de trafic
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Sommaire</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../guide.html">Guide d’utilisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">Référence de l’API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Simulateur de trafic</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">models.reseau</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de models.reseau</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Réseau routier : routes, intersections (avec feux) et logique globale.</span>
+
+<span class="sd">Le réseau est un graphe orienté dont les nœuds sont des</span>
+<span class="sd">:class:`Intersection` et les arêtes des :class:`~models.route.Route`.</span>
+<span class="sd">Il est généralement construit à partir d'un fichier JSON</span>
+<span class="sd">(:meth:`ReseauRoutier.from_json`).</span>
+<span class="sd">"""</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">deque</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.route</span><span class="w"> </span><span class="kn">import</span> <span class="n">Route</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.vehicule</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vehicule</span>
+
+
+<div class="viewcode-block" id="Intersection">
+<a class="viewcode-back" href="../../api/models.html#models.reseau.Intersection">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Intersection</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Nœud du réseau, éventuellement régulé par des feux tricolores.</span>
+
+<span class="sd">    Les feux fonctionnent par phases : pendant une phase, seules les routes</span>
+<span class="sd">    entrantes listées sont au vert. Sans phases, l'intersection est libre.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        identifiant (str): Identifiant unique.</span>
+<span class="sd">        x (float): Abscisse (pour la cartographie).</span>
+<span class="sd">        y (float): Ordonnée (pour la cartographie).</span>
+<span class="sd">        phases (list[tuple[frozenset[str], float]]): Couples</span>
+<span class="sd">            (routes au vert, durée en secondes).</span>
+<span class="sd">    """</span>
+
+<div class="viewcode-block" id="Intersection.__init__">
+<a class="viewcode-back" href="../../api/models.html#models.reseau.Intersection.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifiant</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">phases</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Crée une intersection.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            identifiant (str): Identifiant unique.</span>
+<span class="sd">            x (float): Abscisse. Défaut : 0.</span>
+<span class="sd">            y (float): Ordonnée. Défaut : 0.</span>
+<span class="sd">            phases (list[dict] | None): Phases de feux, chaque phase étant un</span>
+<span class="sd">                dictionnaire ``{"routes": [...], "duree": secondes}``.</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">identifiant</span> <span class="o">=</span> <span class="n">identifiant</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phases</span> <span class="o">=</span> <span class="p">[(</span><span class="nb">frozenset</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="s2">"routes"</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="s2">"duree"</span><span class="p">]))</span>
+                       <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">(</span><span class="n">phases</span> <span class="ow">or</span> <span class="p">[])]</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cycle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""float: Durée totale d'un cycle de feux (s), 0 sans feux."""</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">d</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">phases</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">a_des_feux</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""bool: ``True`` si l'intersection est régulée par des feux."""</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phases</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Intersection.est_vert">
+<a class="viewcode-back" href="../../api/models.html#models.reseau.Intersection.est_vert">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">est_vert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nom_route</span><span class="p">,</span> <span class="n">temps</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Indique si une route entrante peut passer à l'instant donné.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            nom_route (str): Nom de la route entrante.</span>
+<span class="sd">            temps (float): Temps de simulation (s).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: ``True`` si le feu est vert, ou si la route n'est concernée</span>
+<span class="sd">            par aucune phase (passage libre).</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">phases</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">nom_route</span> <span class="ow">in</span> <span class="n">r</span> <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">phases</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">temps</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">cycle</span>
+        <span class="n">cumul</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">routes</span><span class="p">,</span> <span class="n">duree</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">phases</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">cumul</span> <span class="o">+</span> <span class="n">duree</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">nom_route</span> <span class="ow">in</span> <span class="n">routes</span>
+            <span class="n">cumul</span> <span class="o">+=</span> <span class="n">duree</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ReseauRoutier">
+<a class="viewcode-back" href="../../api/models.html#models.reseau.ReseauRoutier">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ReseauRoutier</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Ensemble des routes et intersections, et dynamique globale du trafic.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        routes (dict[str, Route]): Routes indexées par nom.</span>
+<span class="sd">        intersections (dict[str, Intersection]): Intersections indexées par id.</span>
+<span class="sd">        points_entree (list[str]): Routes où apparaissent les véhicules</span>
+<span class="sd">            (toutes les routes si la liste est vide).</span>
+<span class="sd">        termines (list[Vehicule]): Véhicules arrivés à destination.</span>
+<span class="sd">        nb_crees (int): Nombre total de véhicules créés.</span>
+<span class="sd">    """</span>
+<div class="viewcode-block" id="ReseauRoutier.__init__">
+<a class="viewcode-back" href="../../api/models.html#models.reseau.ReseauRoutier.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points_entree</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Crée un réseau vide.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            points_entree (list[str] | None): Noms des routes d'entrée.</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">routes</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intersections</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">points_entree</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">points_entree</span> <span class="ow">or</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">termines</span> <span class="o">=</span> <span class="p">[]</span>      <span class="c1"># véhicules arrivés à destination</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nb_crees</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_succ</span> <span class="o">=</span> <span class="kc">None</span>       <span class="c1"># cache du graphe route -&gt; routes suivantes</span></div>
+
+
+    <span class="c1"># --- construction ---------------------------------------------------</span>
+<div class="viewcode-block" id="ReseauRoutier.from_dict">
+<a class="viewcode-back" href="../../api/models.html#models.reseau.ReseauRoutier.from_dict">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Construit un réseau à partir d'un dictionnaire de configuration.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config (dict): Dictionnaire avec les clés ``intersections``,</span>
+<span class="sd">                ``routes`` et, optionnellement, ``generation``.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ReseauRoutier: Réseau construit.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: Si une route est dupliquée ou si un point d'entrée est</span>
+<span class="sd">                inconnu.</span>
+<span class="sd">            KeyError: Si une clé obligatoire est absente.</span>
+<span class="sd">        """</span>
+        <span class="n">reseau</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"generation"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"points_entree"</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s2">"intersections"</span><span class="p">]:</span>
+            <span class="n">reseau</span><span class="o">.</span><span class="n">ajouter_intersection</span><span class="p">(</span>
+                <span class="n">Intersection</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"x"</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"y"</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"feux"</span><span class="p">)))</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s2">"routes"</span><span class="p">]:</span>
+            <span class="n">reseau</span><span class="o">.</span><span class="n">ajouter_route</span><span class="p">(</span><span class="n">Route</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">"nom"</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s2">"longueur"</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s2">"limite_vitesse"</span><span class="p">],</span>
+                                       <span class="n">r</span><span class="p">[</span><span class="s2">"origine"</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s2">"destination"</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">nom</span> <span class="ow">in</span> <span class="n">reseau</span><span class="o">.</span><span class="n">points_entree</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">nom</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">reseau</span><span class="o">.</span><span class="n">routes</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Point d'entrée inconnu : </span><span class="si">{</span><span class="n">nom</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">reseau</span></div>
+
+
+<div class="viewcode-block" id="ReseauRoutier.from_json">
+<a class="viewcode-back" href="../../api/models.html#models.reseau.ReseauRoutier.from_json">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_json</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">chemin</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Construit un réseau à partir d'un fichier JSON.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            chemin (str): Chemin du fichier de configuration.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ReseauRoutier: Réseau construit.</span>
+<span class="sd">        """</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">chemin</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="ReseauRoutier.ajouter_intersection">
+<a class="viewcode-back" href="../../api/models.html#models.reseau.ReseauRoutier.ajouter_intersection">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ajouter_intersection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inter</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Ajoute (ou remplace) une intersection.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            inter (Intersection): Intersection à ajouter.</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intersections</span><span class="p">[</span><span class="n">inter</span><span class="o">.</span><span class="n">identifiant</span><span class="p">]</span> <span class="o">=</span> <span class="n">inter</span></div>
+
+
+<div class="viewcode-block" id="ReseauRoutier.ajouter_route">
+<a class="viewcode-back" href="../../api/models.html#models.reseau.ReseauRoutier.ajouter_route">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ajouter_route</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">route</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Ajoute une route, en créant ses intersections si nécessaire.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            route (Route): Route à ajouter.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: Si une route de même nom existe déjà.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">route</span><span class="o">.</span><span class="n">nom</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Route dupliquée : </span><span class="si">{</span><span class="n">route</span><span class="o">.</span><span class="n">nom</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">origine</span><span class="p">,</span> <span class="n">route</span><span class="o">.</span><span class="n">destination</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">intersections</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ajouter_intersection</span><span class="p">(</span><span class="n">Intersection</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">routes</span><span class="p">[</span><span class="n">route</span><span class="o">.</span><span class="n">nom</span><span class="p">]</span> <span class="o">=</span> <span class="n">route</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_succ</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+    <span class="c1"># --- graphe ---------------------------------------------------------</span>
+<div class="viewcode-block" id="ReseauRoutier.routes_suivantes">
+<a class="viewcode-back" href="../../api/models.html#models.reseau.ReseauRoutier.routes_suivantes">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">routes_suivantes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nom_route</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Liste les routes qu'un véhicule peut emprunter après une route donnée.</span>
+
+<span class="sd">        Les demi-tours sont exclus. Le graphe est mis en cache.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            nom_route (str): Nom de la route actuelle.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[str]: Noms des routes accessibles.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_succ</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_succ</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_succ</span><span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">nom</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">nom</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                                     <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">origine</span> <span class="o">==</span> <span class="n">r</span><span class="o">.</span><span class="n">destination</span>
+                                     <span class="ow">and</span> <span class="n">s</span><span class="o">.</span><span class="n">destination</span> <span class="o">!=</span> <span class="n">r</span><span class="o">.</span><span class="n">origine</span><span class="p">]</span>  <span class="c1"># pas de demi-tour</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_succ</span><span class="p">[</span><span class="n">nom_route</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ReseauRoutier.itineraire_aleatoire">
+<a class="viewcode-back" href="../../api/models.html#models.reseau.ReseauRoutier.itineraire_aleatoire">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">itineraire_aleatoire</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">depart</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Choisit une destination au hasard et calcule le plus court chemin.</span>
+
+<span class="sd">        Le calcul est un parcours en largeur (BFS) sur le graphe des routes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            rng (random.Random): Générateur pseudo-aléatoire.</span>
+<span class="sd">            depart (str): Nom de la route de départ.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[str]: Itinéraire, du départ à la destination incluse. Réduit à</span>
+<span class="sd">            ``[depart]`` si aucune autre route n'est atteignable.</span>
+<span class="sd">        """</span>
+        <span class="n">parents</span><span class="p">,</span> <span class="n">file</span> <span class="o">=</span> <span class="p">{</span><span class="n">depart</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="n">deque</span><span class="p">([</span><span class="n">depart</span><span class="p">])</span>
+        <span class="k">while</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">courant</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes_suivantes</span><span class="p">(</span><span class="n">courant</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">s</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parents</span><span class="p">:</span>
+                    <span class="n">parents</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">courant</span>
+                    <span class="n">file</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">cibles</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">parents</span> <span class="k">if</span> <span class="n">n</span> <span class="o">!=</span> <span class="n">depart</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cibles</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">depart</span><span class="p">]</span>
+        <span class="n">n</span><span class="p">,</span> <span class="n">chemin</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">cibles</span><span class="p">)),</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="n">n</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">chemin</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">parents</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">chemin</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+    <span class="c1"># --- véhicules ------------------------------------------------------</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">vehicules</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""list[Vehicule]: Tous les véhicules actuellement en circulation."""</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">vehicules</span><span class="p">]</span>
+
+<div class="viewcode-block" id="ReseauRoutier.generer_vehicule">
+<a class="viewcode-back" href="../../api/models.html#models.reseau.ReseauRoutier.generer_vehicule">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generer_vehicule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">temps</span><span class="p">,</span> <span class="n">candidates</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Crée un véhicule sur une route d'entrée tirée au hasard.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            rng (random.Random): Générateur pseudo-aléatoire.</span>
+<span class="sd">            temps (float): Temps de simulation courant (s).</span>
+<span class="sd">            candidates (list[str] | None): Routes candidates ; par défaut les</span>
+<span class="sd">                points d'entrée, ou toutes les routes s'il n'y en a pas.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Vehicule | None: Véhicule créé, ou ``None`` si la route choisie est</span>
+<span class="sd">            saturée à l'entrée.</span>
+<span class="sd">        """</span>
+        <span class="n">noms</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">candidates</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">points_entree</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes</span><span class="p">)</span>
+        <span class="n">depart</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes</span><span class="p">[</span><span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">noms</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">depart</span><span class="o">.</span><span class="n">a_de_la_place</span><span class="p">():</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">Vehicule</span><span class="p">(</span><span class="sa">f</span><span class="s2">"V</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_crees</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">:</span><span class="s2">05d</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">itineraire_aleatoire</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="n">depart</span><span class="o">.</span><span class="n">nom</span><span class="p">),</span> <span class="n">temps</span><span class="p">)</span>
+        <span class="n">depart</span><span class="o">.</span><span class="n">ajouter_vehicule</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nb_crees</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">v</span></div>
+
+
+    <span class="c1"># --- dynamique ------------------------------------------------------</span>
+<div class="viewcode-block" id="ReseauRoutier.mettre_a_jour">
+<a class="viewcode-back" href="../../api/models.html#models.reseau.ReseauRoutier.mettre_a_jour">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mettre_a_jour</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta_t</span><span class="p">,</span> <span class="n">temps</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Exécute un pas de simulation.</span>
+
+<span class="sd">        Étape 1 : chaque route fait avancer ses véhicules. Étape 2 : le véhicule</span>
+<span class="sd">        en tête de chaque route sort du réseau s'il est arrivé, ou passe sur la</span>
+<span class="sd">        route suivante si le feu est vert et qu'il y a de la place.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            delta_t (float): Durée du pas (s).</span>
+<span class="sd">            temps (float): Temps de simulation au début du pas (s).</span>
+<span class="sd">        """</span>
+        <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">route</span><span class="o">.</span><span class="n">mettre_a_jour_vehicules</span><span class="p">(</span><span class="n">delta_t</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">tete</span> <span class="o">=</span> <span class="n">route</span><span class="o">.</span><span class="n">tete_de_file</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">tete</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">suivante</span> <span class="o">=</span> <span class="n">tete</span><span class="o">.</span><span class="n">route_suivante</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">suivante</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>                      <span class="c1"># destination atteinte</span>
+                <span class="n">route</span><span class="o">.</span><span class="n">retirer_vehicule</span><span class="p">(</span><span class="n">tete</span><span class="p">)</span>
+                <span class="n">tete</span><span class="o">.</span><span class="n">arrive</span><span class="p">,</span> <span class="n">tete</span><span class="o">.</span><span class="n">temps_arrivee</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">temps</span> <span class="o">+</span> <span class="n">delta_t</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">termines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tete</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="n">inter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intersections</span><span class="p">[</span><span class="n">route</span><span class="o">.</span><span class="n">destination</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">inter</span><span class="o">.</span><span class="n">est_vert</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">nom</span><span class="p">,</span> <span class="n">temps</span><span class="p">):</span>
+                <span class="n">tete</span><span class="o">.</span><span class="n">changer_de_route</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">routes</span><span class="p">[</span><span class="n">suivante</span><span class="p">])</span>  <span class="c1"># False si saturée</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Droits d'auteur .</p>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
